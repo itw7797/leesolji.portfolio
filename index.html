@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEE SOLJI — Portfolio</title>
+
+<!-- 창 아이콘 (파비콘) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.85em%22 font-size=%2285%22 fill=%22black%22>✸</text></svg>">
+
+<!-- 폰트 로드 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #FFFFFF;
+  --ink: #111111;
+  --mut: #888888;
+  --line: #EEEEEE;
+  --accent: #B08D57;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", "Noto Sans KR", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.mono { font-family: "IBM Plex Mono", monospace; }
+
+/* ── 전체 2열 레이아웃 ── */
+.page-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  padding: 80px 40px;
+  gap: 70px;
+}
+
+/* ── [좌측] 로고 및 사이드 메뉴 ── */
+.sidebar {
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo-area {
+  margin-bottom: 50px;
+  cursor: pointer;
+}
+.logo-area .symbol {
+  font-size: 2.2rem;
+  margin-bottom: 4px;
+  display: inline-block;
+  color: var(--ink);
+}
+.logo-area .logo-text {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.side-nav button {
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #999999;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.side-nav button:hover,
+.side-nav button.active {
+  color: var(--ink);
+}
+
+/* ── [우측] 탭 패널 ── */
+.main-content { min-height: 500px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── 작업물 카드 애니메이션 ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tab-panel.active .animate-item {
+  opacity: 0;
+  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.tab-panel.active .animate-item:nth-child(1) { animation-delay: 0.04s; }
+.tab-panel.active .animate-item:nth-child(2) { animation-delay: 0.08s; }
+.tab-panel.active .animate-item:nth-child(3) { animation-delay: 0.12s; }
+.tab-panel.active .animate-item:nth-child(4) { animation-delay: 0.16s; }
+.tab-panel.active .animate-item:nth-child(5) { animation-delay: 0.20s; }
+.tab-panel.active .animate-item:nth-child(6) { animation-delay: 0.24s; }
+
+/* ── [ABOUT 페이지] ── */
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+  color: #111111;
+}
+.profile-title {
+  font-size: 0.85rem;
+  color: #888888;
+  font-weight: 500;
+  margin-bottom: 40px;
+}
+.intro-text p {
+  font-size: 0.95rem;
+  color: #222222;
+  line-height: 1.8;
+  margin-bottom: 40px;
+}
+.spec-section { margin-bottom: 30px; }
+.spec-section h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #111111;
+}
+.spec-section ul { list-style: none; padding: 0; }
+.spec-section li {
+  font-size: 0.92rem;
+  color: #444444;
+  line-height: 1.7;
+  position: relative;
+  padding-left: 14px;
+}
+.spec-section li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--ink);
+}
+.contact-section {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid #EEEEEE;
+  font-size: 0.85rem;
+  color: #888888;
+  line-height: 1.6;
+}
+.contact-section a {
+  color: #888888;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.contact-section a:hover { color: var(--ink); }
+
+/* ── [그리드 카드 (MOVIE, 3D & UNREAL 탭용)] ── */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 20px;
+}
+.card {
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+.card:hover { transform: translateY(-4px); }
+.card:hover .meta h3 { color: var(--accent); }
+
+.thumb {
+  aspect-ratio: 16/11;
+  width: 100%;
+  border-radius: 4px;
+  background-color: #242933;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card:hover .thumb img {
+  transform: scale(1.06);
+}
+
+.card[data-tone="blue"] .thumb { background: linear-gradient(135deg, #243545, #18222C); }
+.card[data-tone="purple"] .thumb { background: linear-gradient(135deg, #372A42, #211928); }
+.card[data-tone="gold"] .thumb { background: linear-gradient(135deg, #423824, #262014); }
+
+.meta h3 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
+  transition: color 0.2s;
+}
+.meta .sub {
+  font-size: 0.78rem;
+  color: #888888;
+  display: flex;
+  gap: 10px;
+}
+
+/* ── [DRAWING 메이슨리] ── */
+.masonry-grid {
+  column-count: 3;
+  column-gap: 20px;
+}
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  background: #FFFFFF;
+  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.masonry-img-box {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #f0f0f0;
+}
+.masonry-img-box img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s;
+}
+.masonry-item:hover .masonry-img-box img {
+  transform: scale(1.04);
+}
+
+/* ── [모달 팝업 & 슬라이더 내부] ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal-card {
+  background: #FFFFFF;
+  color: #111111;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  border-radius: 8px;
+  overflow-y: auto;
+  position: relative;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.modal-close {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #888888;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: #111111; }
+.modal-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+.modal-sub { font-size: 0.85rem; color: #888888; margin-bottom: 24px; }
+
+/* 모달 내부 미디어 영역 */
+.modal-media {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #0D0E11;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.modal-media iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.modal-media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 모달 슬라이더 컨트롤 버튼 */
+.modal-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.4);
+  color: #FFFFFF;
+  border: none;
+  font-size: 1.5rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 10;
+}
+.modal-nav-btn:hover { background: rgba(0,0,0,0.8); }
+.modal-nav-btn.prev { left: 14px; }
+.modal-nav-btn.next { right: 14px; }
+
+/* 모달 내부 이미지 썸네일 스트립 */
+.modal-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+}
+.modal-thumb-item {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  cursor: pointer;
+  opacity: 0.4;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: opacity 0.2s, border-color 0.2s;
+  background: #181A20;
+}
+.modal-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.modal-thumb-item:hover { opacity: 0.8; }
+.modal-thumb-item.active { opacity: 1; border-color: #111111; }
+
+.modal-actions { margin-bottom: 20px; }
+.btn-external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #555555;
+  background: #F4F4F5;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-external-link:hover { background: #E5E5E7; color: #111111; }
+.modal-desc { font-size: 0.95rem; line-height: 1.8; color: #333333; white-space: pre-line; }
+
+/* ── 모바일 반응형 ── */
+@media(max-width: 900px){
+  .work-grid { grid-template-columns: repeat(2, 1fr); }
+  .masonry-grid { column-count: 2; }
+}
+@media(max-width: 680px){
+  .page-container { grid-template-columns: 1fr; gap: 40px; padding: 40px 20px; }
+  .sidebar { position: static; }
+  .side-nav { flex-direction: row; flex-wrap: wrap; gap: 14px; }
+  .work-grid { grid-template-columns: 1fr; }
+  .masonry-grid { column-count: 1; }
+  .modal-card { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-container">
+
+  <!-- ══════════ 좌측 네비게이션 ══════════ -->
+  <aside class="sidebar">
+    <div class="logo-area" onclick="switchTab('about')">
+      <div class="symbol">✸</div>
+      <div class="logo-text">LEE SOLJI</div>
+    </div>
+
+    <nav class="side-nav">
+      <button class="nav-btn active" data-tab="about">ABOUT</button>
+      <button class="nav-btn" data-tab="unreal">MOVIE</button>
+      <button class="nav-btn" data-tab="motion">3D & UNREAL</button>
+      <button class="nav-btn" data-tab="drawing">DRAWING</button>
+    </nav>
+  </aside>
+
+  <!-- ══════════ 우측 페이지 콘텐츠 ══════════ -->
+  <main class="main-content">
+
+    <!-- 1. ABOUT 탭 -->
+    <div id="tab-about" class="tab-panel active">
+      <div class="profile-name">이솔지 | Lee solji</div>
+      <div class="profile-title">Cinematic & Environment 3D Artist</div>
+
+      <div class="intro-text">
+        <p>영화 및 언론을 전공하며 시각적 연출과 프레임 안의 공간 구도를 다뤄왔습니다.<br>
+        2D 원화 기반의 콘셉트 기획부터 3D 모델링, 언리얼 엔진을 활용한 레벨 디자인, 실시간 씬 구성 및 라이팅까지 파이프라인 전반을 다룹니다.<br>
+        영화적 문법을 공간과 에셋에 녹여내어, 단순한 오브젝트를 넘어 서사가 담긴 장면을 설계합니다.</p>
+      </div>
+
+      <div class="spec-section">
+        <h3>[ Core Competencies / 주요 강점 ]</h3>
+        <ul>
+          <li>3D Environment & Architectural Modeling (배경 및 건축·구조물 모델링)</li>
+          <li>2D Concept Art & World-Building (콘셉트 원화 및 세계관 설정)</li>
+          <li>Unreal Engine Scene Composition & Lighting (엔진 내 씬 빌딩, 조명 및 시네마틱 연출)</li>
+          <li>Cinematic Storytelling (영화적 연출과 카메라 앵글 설계)</li>
+        </ul>
+      </div>
+
+      <div class="spec-section">
+        <h3>[ Tools & Pipeline ]</h3>
+        <ul>
+          <li>3D & Engine: Maya / Blender / 3ds Max, ZBrush, Unreal Engine 5</li>
+          <li>Texturing: Substance 3D Painter, Photoshop</li>
+          <li>2D Concept: Clip Studio Paint, Photoshop</li>
+          <li>Video & Motion: Premiere Pro, After Effects</li>
+        </ul>
+      </div>
+
+      <div class="contact-section">
+        <p>[ Contact ]</p>
+        <p>Mail: <a href="mailto:moonlight3260@naver.com">moonlight3260@naver.com</a></p>
+        <p>Tel: <a href="tel:010-5603-3733">010-5603-3733</a></p>
+      </div>
+    </div>
+
+    <!-- 2. MOVIE 탭 (유튜브 영상 연동) -->
+    <div id="tab-unreal" class="tab-panel">
+      <div class="work-grid">
+        <!-- 1. ON -->
+        <div class="card animate-item" data-tone="blue" onclick="openDetail('ue_env1')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/61vKhug2qgU/hqdefault.jpg" alt="ON"></div>
+          <div class="meta"><h3>ON</h3><div class="sub mono"><span>연출</span><span>2026</span></div></div>
+        </div>
+        <!-- 2. 엠피쓰리 -->
+        <div class="card animate-item" data-tone="purple" onclick="openDetail('ue_prop1')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/zJ1Omd6GDnM/hqdefault.jpg" alt="엠피쓰리"></div>
+          <div class="meta"><h3>엠피쓰리</h3><div class="sub mono"><span>조연출</span><span>2025</span></div></div>
+        </div>
+        <!-- 3. 허들 -->
+        <div class="card animate-item" data-tone="gold" onclick="openDetail('ue_cine1')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/HhOZc8ovCZo/hqdefault.jpg" alt="허들"></div>
+          <div class="meta"><h3>허들</h3><div class="sub mono"><span>미술 · 동시녹음</span><span>2025</span></div></div>
+        </div>
+        <!-- 4. 산소의 무게 -->
+        <div class="card animate-item" data-tone="blue" onclick="openDetail('motion1')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/-8ZWjVsmMtw/hqdefault.jpg" alt="산소의 무게"></div>
+          <div class="meta"><h3>산소의 무게</h3><div class="sub mono"><span>조연출</span><span>2025</span></div></div>
+        </div>
+        <!-- 5. Again my life -->
+        <div class="card animate-item" data-tone="purple" onclick="openDetail('motion2')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/qc9--pMen9k/hqdefault.jpg" alt="Again my life"></div>
+          <div class="meta"><h3>Again my life</h3><div class="sub mono"><span>연출</span><span>2024</span></div></div>
+        </div>
+        <!-- 6. 완전한 이해 -->
+        <div class="card animate-item" data-tone="gold" onclick="openDetail('motion3')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/NXxV0VpA0vw/hqdefault.jpg" alt="완전한 이해"></div>
+          <div class="meta"><h3>완전한 이해</h3><div class="sub mono"><span>조연출</span><span>2023</span></div></div>
+        </div>
+        <!-- 7. 소희 -->
+        <div class="card animate-item" data-tone="blue" onclick="openDetail('motion4')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/--rYCYULjqA/hqdefault.jpg" alt="소희"></div>
+          <div class="meta"><h3>소희</h3><div class="sub mono"><span>조연출</span><span>2023</span></div></div>
+        </div>
+        <!-- 8. 21% -->
+        <div class="card animate-item" data-tone="purple" onclick="openDetail('motion5')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/Sf7CWYNKnR0/hqdefault.jpg" alt="21%"></div>
+          <div class="meta"><h3>21%</h3><div class="sub mono"><span>조연출</span><span>2022</span></div></div>
+        </div>
+        <!-- 9. 야상곡 -->
+        <div class="card animate-item" data-tone="gold" onclick="openDetail('motion6')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/xbecy4hILyc/hqdefault.jpg" alt="야상곡"></div>
+          <div class="meta"><h3>야상곡</h3><div class="sub mono"><span>연출부</span><span>2022</span></div></div>
+        </div>
+        <!-- 10. 고래와 새우 -->
+        <div class="card animate-item" data-tone="blue" onclick="openDetail('motion7')">
+          <div class="thumb"><img src="https://img.youtube.com/vi/45I7OJ1vNPI/hqdefault.jpg" alt="고래와 새우"></div>
+          <div class="meta"><h3>고래와 새우</h3><div class="sub mono"><span>연출부</span><span>2022</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 3D & UNREAL 탭 (u1~u5 이미지 슬라이더 연동) -->
+    <div id="tab-motion" class="tab-panel">
+      <div class="work-grid">
+        <div class="card animate-item" data-tone="gold" onclick="openDetail('unreal_work1')">
+          <div class="thumb">
+            <img src="images/u2.jpg" alt="폐 구덩이 레벨 디자인">
+          </div>
+          <div class="meta">
+            <h3>폐 구덩이 레벨 디자인</h3>
+            <div class="sub mono"><span>UNREAL ENGINE</span><span>2026</span></div>
+          </div>
+        </div>
+        <div class="card animate-item" data-tone="gold" onclick="openDetail('unreal_work2')">
+          <div class="thumb">
+            <img src="images/u1.jpg" alt="탐정 사무실 레벨 디자인">
+          </div>
+          <div class="meta">
+            <h3>탐정 사무실 레벨 디자인</h3>
+            <div class="sub mono"><span>UNREAL ENGINE</span><span>2026</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. DRAWING 탭 (핀터레스트 스타일 다단 정렬) -->
+    <div id="tab-drawing" class="tab-panel">
+      <div class="masonry-grid" id="drawingGrid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════ 작업물 상세 모달 ══════════ -->
+<div class="modal-overlay" id="workModal" onclick="handleModalClick(event)">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeDetail()">&times;</button>
+    <h2 class="modal-title" id="modalTitle">작품 타이틀</h2>
+    <div class="modal-sub mono" id="modalSub">TOOL · YEAR</div>
+    
+    <!-- 미디어 영역 (유튜브 영상 또는 이미지 슬라이더) -->
+    <div class="modal-media" id="modalMedia"></div>
+    <!-- 모달 전용 썸네일 스트립 (이미지가 여러 장일 때 자동 생성) -->
+    <div class="modal-thumbs" id="modalThumbs"></div>
+
+    <div class="modal-actions" id="modalActions"></div>
+    <div class="modal-desc" id="modalDesc"></div>
+  </div>
+</div>
+
+<!-- ══════════ 스크립트 ══════════ -->
+<script>
+/* ── [DRAWING 갤러리 이미지 데이터] ── */
+const drawingData = [
+  { img: 'images/d2.png' },
+  { img: 'images/d3.png' },
+  { img: 'images/d4.png' },
+];
+
+function initDrawingGrid() {
+  const grid = document.getElementById('drawingGrid');
+  grid.innerHTML = '';
+  drawingData.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'masonry-item animate-item';
+    el.innerHTML = `
+      <div class="masonry-img-box">
+        <img src="${item.img}" alt="Drawing ${idx + 1}" loading="lazy">
+      </div>
+    `;
+    grid.appendChild(el);
+  });
+}
+
+/* ── [작품 모달 상세 데이터] ── */
+const workData = {
+  unreal_work1: {
+    title: '폐 구덩이 레벨 디자인',
+    sub: 'Unreal Engine · 2026',
+    images: [
+      'images/u2.jpg',
+      'images/u3.jpg',
+      'images/u4.jpg',
+      'images/u5.jpg',
+    ],
+    desc: '3D 씬 모델링 및 영화적 조명 설계를 통해 분위기를 연출한 타이틀 시퀀스 프로젝트입니다.\n다양한 각도의 렌더 이미지와 디테일 컷을 확인할 수 있습니다.'
+  },
+  unreal_work2: {
+    title: '탐정 사무실 레벨 디자인',
+    sub: 'Unreal Engine · 2026',
+    images: [
+      'images/u1.jpg',
+    ],
+    desc: '3D 씬 모델링 및 영화적 조명 설계를 통해 분위기를 연출한 타이틀 시퀀스 프로젝트입니다.\n다양한 각도의 렌더 이미지와 디테일 컷을 확인할 수 있습니다.'
+  },
+  ue_env1: {
+    title: 'ON',
+    sub: '연출 · 2026 · 제 2회 대전 꿈돌이 영화제 수상작',
+    videoId: '61vKhug2qgU',
+    desc: "유전자 편집으로 만들어져 효율의 가치만 생각하며 자라온 소녀 '온'이 자신에게 이름을 붙여준 소녀 '하나'를 통해 인간에 대해 고찰하고 일어나는 이야기."
+  },
+  ue_prop1: {
+    title: '엠피쓰리',
+    sub: '조연출 · 2025',
+    videoId: 'zJ1Omd6GDnM',
+    desc: '죽은 친구의 마지막 소원을 들어주기로 한 친구들의 이야기.'
+  },
+  ue_cine1: {
+    title: '허들',
+    sub: '미술/동시녹음 · 2025',
+    videoId: 'HhOZc8ovCZo',
+    desc: '수연은 중증 장애인으로, 병원에 늦지 않게 도착해야 한다. 그러나 병원으로 향하는 길은 멀고 험하다. 지하철에서 마주하는 차별과 편견은 그녀를 더욱 지치게 하고, 술에 취해 외국인에게 막말을 퍼붓는 남자를 만나는 순간 긴장은 최고조에 이른다. 수연은 그 남자에게 당당하게 맞설 수 있을까.'
+  },
+  motion1: {
+    title: '산소의 무게',
+    sub: '조연출 · 2025',
+    videoId: '-8ZWjVsmMtw',
+    desc: '산소가 부족한 세상. 과연 이 곳에서 산소를 구할 수 있을까.'
+  },
+  motion2: {
+    title: 'Again my life',
+    sub: '연출 · 2024',
+    videoId: 'qc9--pMen9k',
+    desc: '자기 삶에 어떤 계획도, 의욕도 없이 하루하루 살아가는 민지. 자신에게만 이어지는 불합리한 상황에 지칠대로 지쳤다. 그런 무의미한 삶 속에서 천사를 만나며 일어나는 이야기.'
+  },
+  motion3: {
+    title: '완전한 이해',
+    sub: '조연출 · 2023 · 대전영화대전 수상작',
+    videoId: 'NXxV0VpA0vw',
+    desc: '내가 잘 안다고 생각했던 사람이 전혀 모르는 사람이 되었다. 저 사람을 이해 할 수 있을까.'
+  },
+  motion4: {
+    title: '소희',
+    sub: '조연출 · 2023',
+    videoId: '--rYCYULjqA',
+    desc: '매순간 선택의 시간이 오면 소희는 엄마의 선택에만 따랐다. 그러다 결국 죽음 앞까지 가게 된 소희는 자신을 위한 선택을 할 수 있을까.'
+  },
+  motion5: {
+    title: '21%',
+    sub: '조연출 · 2022',
+    videoId: 'Sf7CWYNKnR0',
+    desc: '동생이 죽은 뒤 나윤은 더 넓은 세상을 경험하고 싶어 했던 동생의 소원을 들어주기 위해 인류가 살아가는 실내가 아닌 다른 장소를 찾아 탐험을 떠나며 일어나는 이야기'
+  },
+  motion6: {
+    title: '야상곡',
+    sub: '연출부 · 2022',
+    videoId: 'xbecy4hILyc',
+    desc: '좀비로 가득해진 세상에서 마지막으로 남긴 생존 일지.'
+  },
+  motion7: {
+    title: '고래와 새우',
+    sub: '연출부 · 2022',
+    videoId: '45I7OJ1vNPI',
+    desc: '고래싸움에 새우등 터진다.'
+  }
+};
+
+/* ── [모달 상세창 컨트롤] ── */
+let currentModalImages = [];
+let currentModalImgIdx = 0;
+
+function openDetail(workKey) {
+  const data = workData[workKey];
+  if (!data) return;
+
+  document.getElementById('modalTitle').innerText = data.title;
+  document.getElementById('modalSub').innerText = data.sub;
+  document.getElementById('modalDesc').innerText = data.desc;
+
+  const mediaContainer = document.getElementById('modalMedia');
+  const thumbsContainer = document.getElementById('modalThumbs');
+  const actionContainer = document.getElementById('modalActions');
+
+  mediaContainer.innerHTML = '';
+  thumbsContainer.innerHTML = '';
+  actionContainer.innerHTML = '';
+
+  if (data.images && data.images.length > 0) {
+    currentModalImages = data.images;
+    currentModalImgIdx = 0;
+
+    mediaContainer.innerHTML = `
+      <img id="modalMainImg" src="${currentModalImages[0]}" alt="${data.title}">
+      ${currentModalImages.length > 1 ? `
+        <button class="modal-nav-btn prev" onclick="changeModalImg(-1)">&lang;</button>
+        <button class="modal-nav-btn next" onclick="changeModalImg(1)">&rang;</button>
+      ` : ''}
+    `;
+
+    if (currentModalImages.length > 1) {
+      currentModalImages.forEach((imgSrc, idx) => {
+        const t = document.createElement('div');
+        t.className = `modal-thumb-item ${idx === 0 ? 'active' : ''}`;
+        t.onclick = () => setModalImg(idx);
+        t.innerHTML = `<img src="${imgSrc}">`;
+        thumbsContainer.appendChild(t);
+      });
+    }
+  } else if (data.videoId) {
+    mediaContainer.innerHTML = `
+      <iframe 
+        width="100%" 
+        height="100%" 
+        src="https://www.youtube.com/embed/${data.videoId}" 
+        title="${data.title}" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>`;
+
+    actionContainer.innerHTML = `
+      <a href="https://www.youtube.com/watch?v=${data.videoId}" target="_blank" class="btn-external-link">
+        ↗ YouTube 새 탭에서 고화질로 시청하기
+      </a>`;
+  }
+
+  document.getElementById('workModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function changeModalImg(direction) {
+  currentModalImgIdx += direction;
+  if (currentModalImgIdx < 0) currentModalImgIdx = currentModalImages.length - 1;
+  if (currentModalImgIdx >= currentModalImages.length) currentModalImgIdx = 0;
+  updateModalImgDisplay();
+}
+
+function setModalImg(index) {
+  currentModalImgIdx = index;
+  updateModalImgDisplay();
+}
+
+function updateModalImgDisplay() {
+  document.getElementById('modalMainImg').src = currentModalImages[currentModalImgIdx];
+  const thumbs = document.querySelectorAll('.modal-thumb-item');
+  thumbs.forEach((t, i) => t.classList.toggle('active', i === currentModalImgIdx));
+}
+
+function closeDetail() {
+  document.getElementById('workModal').classList.remove('active');
+  document.body.style.overflow = '';
+  document.getElementById('modalMedia').innerHTML = '';
+  document.getElementById('modalThumbs').innerHTML = '';
+}
+
+function handleModalClick(event) {
+  if (event.target.id === 'workModal') closeDetail();
+}
+
+/* ── [탭 전환 및 초기화 로직 수정됨] ── */
+const navButtons = document.querySelectorAll('.nav-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+function switchTab(tabId) {
+  navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
+
+  tabPanels.forEach(panel => {
+    if (panel.id === `tab-${tabId}`) {
+      panel.classList.remove('active');
+      void panel.offsetWidth;
+      panel.classList.add('active');
+      
+      if (tabId === 'drawing' && typeof initDrawingGrid === 'function') initDrawingGrid();
+    } else {
+      panel.classList.remove('active');
+    }
+  });
+
+  // URL 해시값만 업데이트 (새로고침 시 탭을 기억하는 로직 제거)
+  history.replaceState(null, '', `#${tabId}`);
+}
+
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// 처음 접속하거나 링크를 통해 들어왔을 때는 무조건 'about' 탭을 강제로 로딩합니다.
+window.addEventListener('DOMContentLoaded', () => {
+  // 로컬 스토리지에 저장되던 탭 기록을 강제로 삭제하여 다른 창이 뜨는 원인 차단
+  localStorage.removeItem('currentPortfolioTab');
+  
+  // 무조건 'about'으로 초기화
+  switchTab('about');
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDetail();
+  
+  const modal = document.getElementById('workModal');
+  if (modal.classList.contains('active') && currentModalImages.length > 1) {
+    if (e.key === 'ArrowLeft') changeModalImg(-1);
+    if (e.key === 'ArrowRight') changeModalImg(1);
+  }
+});
+
+// 카드 클릭 시 지정된 키의 첫 번째 이미지를 썸네일로 자동 세팅
+document.querySelectorAll('.card').forEach(card => {
+  const match = card.getAttribute('onclick')?.match(/'([^']+)'/);
+  if (match) {
+    const key = match[1];
+    const data = workData[key];
+    const thumbBox = card.querySelector('.thumb');
+    if (data && data.images && data.images.length > 0 && thumbBox) {
+      thumbBox.innerHTML = `<img src="${data.images[0]}" alt="${data.title}">`;
+    }
+  }
+});
+</script>
+
+</body>
+</html>
